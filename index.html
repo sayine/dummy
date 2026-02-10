@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emrah Sayın – Portfolio Mind Map</title>
+  <style>
+    /* ── Reset & Base ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: 'Segoe UI', 'Inter', Arial, sans-serif;
+      color: #e0e0e0;
+    }
+
+    /* ── Language Toggle ──────────────────────────────────── */
+    #lang-toggle {
+      position: fixed; top: 16px; right: 16px; z-index: 100;
+      display: flex; gap: 4px;
+      background: rgba(20,20,30,.85);
+      border: 1px solid rgba(0,255,255,.3);
+      border-radius: 8px; padding: 4px;
+      backdrop-filter: blur(6px);
+    }
+    #lang-toggle button {
+      background: transparent; border: none; color: #888;
+      font-size: 14px; padding: 6px 14px; cursor: pointer;
+      border-radius: 6px; transition: all .25s;
+    }
+    #lang-toggle button.active {
+      background: rgba(0,255,255,.15); color: #0ff;
+      box-shadow: 0 0 8px rgba(0,255,255,.25);
+    }
+    #lang-toggle button:hover { color: #0ff; }
+    #lang-toggle button:focus-visible {
+      outline: 2px solid #0ff; outline-offset: 2px;
+    }
+
+    /* ── Accessibility: Skip Link ─────────────────────────── */
+    .skip-link {
+      position: fixed; top: -100px; left: 16px; z-index: 200;
+      background: #0ff; color: #000; padding: 8px 16px;
+      border-radius: 4px; font-weight: 600;
+      transition: top .2s;
+    }
+    .skip-link:focus { top: 16px; }
+
+    /* ── Keyboard Help ────────────────────────────────────── */
+    #kb-help {
+      position: fixed; bottom: 12px; left: 12px; z-index: 100;
+      font-size: 11px; color: #555; pointer-events: none;
+    }
+
+    /* ── SVG Canvas ───────────────────────────────────────── */
+    #canvas { width: 100%; height: 100%; display: block; }
+
+    /* ── Tooltip ──────────────────────────────────────────── */
+    #tooltip {
+      position: fixed; pointer-events: none; z-index: 150;
+      background: rgba(10,10,20,.92);
+      border: 1px solid rgba(0,255,255,.4);
+      border-radius: 6px; padding: 8px 14px;
+      font-size: 13px; color: #ddd;
+      max-width: 260px;
+      box-shadow: 0 0 12px rgba(0,255,255,.15);
+      opacity: 0; transition: opacity .15s;
+      backdrop-filter: blur(8px);
+    }
+    #tooltip.visible { opacity: 1; }
+
+    /* ── Detail Modal ─────────────────────────────────────── */
+    #modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,.75);
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    #modal-overlay.open { display: flex; }
+    #modal {
+      background: rgba(15,15,25,.95);
+      border: 1px solid rgba(0,255,255,.35);
+      border-radius: 12px; padding: 32px 36px;
+      max-width: 520px; width: 90%;
+      max-height: 80vh; overflow-y: auto;
+      box-shadow: 0 0 40px rgba(0,255,255,.12);
+      position: relative;
+    }
+    #modal h2 { color: #0ff; margin-bottom: 12px; font-size: 20px; }
+    #modal p, #modal ul { line-height: 1.65; font-size: 14px; }
+    #modal a { color: #0ff; }
+    #modal-close {
+      position: absolute; top: 12px; right: 16px;
+      background: none; border: none; color: #888;
+      font-size: 22px; cursor: pointer; transition: color .2s;
+    }
+    #modal-close:hover { color: #0ff; }
+    #modal-close:focus-visible { outline: 2px solid #0ff; outline-offset: 2px; }
+
+    /* ── High-Contrast Mode ───────────────────────────────── */
+    body.high-contrast #tooltip,
+    body.high-contrast #modal {
+      background: #000; border-color: #fff; color: #fff;
+    }
+    body.high-contrast #modal h2 { color: #ff0; }
+
+    /* ── HC Toggle ────────────────────────────────────────── */
+    #hc-toggle {
+      position: fixed; top: 16px; left: 16px; z-index: 100;
+      background: rgba(20,20,30,.85);
+      border: 1px solid rgba(0,255,255,.3);
+      border-radius: 8px; padding: 6px 14px;
+      color: #888; font-size: 13px; cursor: pointer;
+      backdrop-filter: blur(6px); transition: all .25s;
+    }
+    #hc-toggle:hover { color: #0ff; }
+    #hc-toggle:focus-visible { outline: 2px solid #0ff; outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <!-- Skip link for keyboard users -->
+  <a class="skip-link" href="#canvas" tabindex="0">Skip to mind map</a>
+
+  <!-- High-contrast toggle -->
+  <button id="hc-toggle" aria-label="Toggle high contrast mode">⬡ HC</button>
+
+  <!-- Language toggle -->
+  <div id="lang-toggle" role="radiogroup" aria-label="Language selection">
+    <button data-lang="en" class="active" role="radio" aria-checked="true">EN</button>
+    <button data-lang="tr" role="radio" aria-checked="false">TR</button>
+  </div>
+
+  <!-- Tooltip -->
+  <div id="tooltip" role="tooltip" aria-hidden="true"></div>
+
+  <!-- Detail Modal -->
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-label="Detail view">
+    <div id="modal">
+      <button id="modal-close" aria-label="Close detail view">&times;</button>
+      <h2 id="modal-title"></h2>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Keyboard help -->
+  <div id="kb-help">Arrow keys: pan &middot; +/&minus;: zoom &middot; Esc: close &middot; Tab: navigate</div>
+
+  <!-- SVG canvas -->
+  <svg id="canvas" aria-label="Interactive portfolio mind map"></svg>
+
+  <!-- D3.js v7 -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script>
+/* ================================================================
+   PORTFOLIO MIND MAP – D3.js Force-Directed Hexagon Graph
+   ================================================================ */
+
+// ── Data ─────────────────────────────────────────────────────────
+const DATA = {
+  id: "root",
+  name: { en: "Emrah Sayın", tr: "Emrah Sayın" },
+  color: "#0ff",
+  children: [
+    {
+      id: "about",
+      name: { en: "About Me", tr: "Hakkımda" },
+      color: "#0ff",
+      children: [
+        {
+          id: "edu",
+          name: { en: "Education", tr: "Eğitim" },
+          color: "#00e5ff",
+          details: {
+            en: "Bachelor's degree in Computer Engineering. Passionate about software development, data visualization, and modern web technologies.",
+            tr: "Bilgisayar Mühendisliği lisans derecesi. Yazılım geliştirme, veri görselleştirme ve modern web teknolojilerine tutkulu."
+          }
+        },
+        {
+          id: "skills",
+          name: { en: "Skills", tr: "Beceriler" },
+          color: "#00e5ff",
+          details: {
+            en: "JavaScript · TypeScript · Python · D3.js · React · Node.js · SQL · Git · Docker · AWS",
+            tr: "JavaScript · TypeScript · Python · D3.js · React · Node.js · SQL · Git · Docker · AWS"
+          }
+        },
+        {
+          id: "interests",
+          name: { en: "Interests", tr: "İlgi Alanları" },
+          color: "#00e5ff",
+          details: {
+            en: "Data visualization, open-source projects, machine learning, and creative coding.",
+            tr: "Veri görselleştirme, açık kaynak projeler, makine öğrenmesi ve yaratıcı kodlama."
+          }
+        }
+      ]
+    },
+    {
+      id: "experience",
+      name: { en: "Work Experience", tr: "İş Deneyimleri" },
+      color: "#bf5fff",
+      children: [
+        {
+          id: "job1",
+          name: { en: "Senior Developer", tr: "Kıdemli Geliştirici" },
+          color: "#c77dff",
+          details: {
+            en: "TechCorp (2021 – Present)\nLead front-end architecture, built real-time dashboards with D3.js, mentored junior developers.",
+            tr: "TechCorp (2021 – Günümüz)\nÖn yüz mimarisini yönetti, D3.js ile gerçek zamanlı panolar oluşturdu, genç geliştiricilere mentorluk yaptı."
+          }
+        },
+        {
+          id: "job2",
+          name: { en: "Full-Stack Developer", tr: "Full-Stack Geliştirici" },
+          color: "#c77dff",
+          details: {
+            en: "WebStudio (2018 – 2021)\nDeveloped scalable REST APIs and SPAs for e-commerce clients. Improved page load times by 40%.",
+            tr: "WebStudio (2018 – 2021)\nE-ticaret müşterileri için ölçeklenebilir REST API'ler ve SPA'lar geliştirdi. Sayfa yüklenme sürelerini %40 iyileştirdi."
+          }
+        },
+        {
+          id: "job3",
+          name: { en: "Junior Developer", tr: "Junior Geliştirici" },
+          color: "#c77dff",
+          details: {
+            en: "StartupHub (2016 – 2018)\nBuilt MVPs for early-stage startups using Node.js and React.",
+            tr: "StartupHub (2016 – 2018)\nNode.js ve React kullanarak erken aşama girişimler için MVP'ler oluşturdu."
+          }
+        }
+      ]
+    },
+    {
+      id: "projects",
+      name: { en: "Projects", tr: "Projeler" },
+      color: "#ff5c8a",
+      children: [
+        {
+          id: "proj1",
+          name: { en: "DataViz Toolkit", tr: "DataViz Araç Seti" },
+          color: "#ff7eb3",
+          details: {
+            en: "Open-source D3.js component library for rapid dashboard prototyping.\nTech: D3.js, TypeScript, Rollup\nhttps://github.com/example/dataviz-toolkit",
+            tr: "Hızlı panel prototipleme için açık kaynak D3.js bileşen kütüphanesi.\nTekn: D3.js, TypeScript, Rollup\nhttps://github.com/example/dataviz-toolkit"
+          }
+        },
+        {
+          id: "proj2",
+          name: { en: "SmartBudget App", tr: "SmartBudget Uygulaması" },
+          color: "#ff7eb3",
+          details: {
+            en: "Personal finance tracker with interactive charts and AI-powered insights.\nTech: React, Node.js, PostgreSQL, Chart.js",
+            tr: "Etkileşimli grafikler ve yapay zekâ destekli içgörülerle kişisel finans takipçisi.\nTekn: React, Node.js, PostgreSQL, Chart.js"
+          }
+        },
+        {
+          id: "proj3",
+          name: { en: "Portfolio Mind Map", tr: "Portfolyo Zihin Haritası" },
+          color: "#ff7eb3",
+          details: {
+            en: "This very site! An interactive hexagonal mind-map portfolio built with D3.js.\nTech: D3.js, Vanilla JS, SVG",
+            tr: "Bu sitenin kendisi! D3.js ile oluşturulmuş etkileşimli altıgen zihin haritası portfolyosu.\nTekn: D3.js, Vanilla JS, SVG"
+          }
+        }
+      ]
+    },
+    {
+      id: "contact",
+      name: { en: "Contact", tr: "İletişim" },
+      color: "#ffb300",
+      children: [
+        {
+          id: "email",
+          name: { en: "Email", tr: "E-posta" },
+          color: "#ffd54f",
+          details: {
+            en: "emrah.sayin@example.com",
+            tr: "emrah.sayin@example.com"
+          }
+        },
+        {
+          id: "linkedin",
+          name: { en: "LinkedIn", tr: "LinkedIn" },
+          color: "#ffd54f",
+          details: {
+            en: "linkedin.com/in/emrahsayin",
+            tr: "linkedin.com/in/emrahsayin"
+          }
+        },
+        {
+          id: "github",
+          name: { en: "GitHub", tr: "GitHub" },
+          color: "#ffd54f",
+          details: {
+            en: "github.com/emrahsayin",
+            tr: "github.com/emrahsayin"
+          }
+        }
+      ]
+    }
+  ]
+};
+
+// ── State ────────────────────────────────────────────────────────
+let currentLang = "en";
+let expandedNodes = new Set(["root"]); // root always visible
+let simulation;
+
+// ── DOM refs ─────────────────────────────────────────────────────
+const svg = d3.select("#canvas");
+const tooltip = document.getElementById("tooltip");
+const modalOverlay = document.getElementById("modal-overlay");
+const modalTitle = document.getElementById("modal-title");
+const modalBody = document.getElementById("modal-body");
+
+// ── Dimensions ───────────────────────────────────────────────────
+let W = window.innerWidth;
+let H = window.innerHeight;
+svg.attr("viewBox", `0 0 ${W} ${H}`);
+
+// ── Container group for zoom/pan ─────────────────────────────────
+const g = svg.append("g");
+
+// ── Defs: glow filter ───────────────────────────────────────────
+const defs = svg.append("defs");
+
+// Glow filter
+const filter = defs.append("filter").attr("id", "glow");
+filter.append("feGaussianBlur").attr("stdDeviation", "4").attr("result", "blur");
+const merge = filter.append("feMerge");
+merge.append("feMergeNode").attr("in", "blur");
+merge.append("feMergeNode").attr("in", "SourceGraphic");
+
+// Stronger glow for hover
+const filterHover = defs.append("filter").attr("id", "glow-hover");
+filterHover.append("feGaussianBlur").attr("stdDeviation", "7").attr("result", "blur");
+const mergeH = filterHover.append("feMerge");
+mergeH.append("feMergeNode").attr("in", "blur");
+mergeH.append("feMergeNode").attr("in", "SourceGraphic");
+
+// ── Hexagon path generator ──────────────────────────────────────
+function hexPath(r) {
+  const a = Math.PI / 3;
+  let d = "";
+  for (let i = 0; i < 6; i++) {
+    // flat-top hexagon: start at angle 0
+    const angle = a * i;
+    const x = r * Math.cos(angle);
+    const y = r * Math.sin(angle);
+    d += (i === 0 ? "M" : "L") + `${x},${y}`;
+  }
+  return d + "Z";
+}
+
+// ── Flatten tree into nodes & links based on expansion ──────────
+function buildGraph() {
+  const nodes = [];
+  const links = [];
+
+  function walk(d, parent, depth) {
+    const n = { id: d.id, data: d, depth, parent: parent ? parent.id : null };
+    nodes.push(n);
+    if (parent) {
+      links.push({ source: parent.id, target: d.id, color: d.color });
+    }
+    if (d.children && expandedNodes.has(d.id)) {
+      d.children.forEach(c => walk(c, d, depth + 1));
+    }
+  }
+  walk(DATA, null, 0);
+  return { nodes, links };
+}
+
+// ── Radius based on depth ───────────────────────────────────────
+function nodeRadius(d) {
+  if (d.depth === 0) return 70;
+  if (d.depth === 1) return 50;
+  return 38;
+}
+
+// ── Link generator (curved) ─────────────────────────────────────
+const linkGen = d3.linkHorizontal()
+  .x(d => d.x)
+  .y(d => d.y);
+
+// ── Render ───────────────────────────────────────────────────────
+function render() {
+  const { nodes, links } = buildGraph();
+
+  // Preserve existing positions
+  const oldPos = {};
+  g.selectAll(".node").each(function(d) {
+    oldPos[d.id] = { x: d.x, y: d.y, vx: d.vx, vy: d.vy };
+  });
+  nodes.forEach(n => {
+    if (oldPos[n.id]) {
+      n.x = oldPos[n.id].x;
+      n.y = oldPos[n.id].y;
+      n.vx = oldPos[n.id].vx;
+      n.vy = oldPos[n.id].vy;
+    } else if (n.parent && oldPos[n.parent]) {
+      // Start child near parent for smooth appearance
+      n.x = oldPos[n.parent].x + (Math.random() - 0.5) * 60;
+      n.y = oldPos[n.parent].y + (Math.random() - 0.5) * 60;
+    }
+  });
+
+  // Fix root to center
+  const root = nodes.find(n => n.id === "root");
+  if (root) { root.fx = W / 2; root.fy = H / 2; }
+
+  // Stop old simulation
+  if (simulation) simulation.stop();
+
+  // Force simulation
+  simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(links).id(d => d.id).distance(d => {
+      const src = nodes.find(n => n.id === (typeof d.source === "object" ? d.source.id : d.source));
+      return src && src.depth === 0 ? 180 : 130;
+    }).strength(0.7))
+    .force("charge", d3.forceManyBody().strength(-400))
+    .force("center", d3.forceCenter(W / 2, H / 2).strength(0.05))
+    .force("collision", d3.forceCollide().radius(d => nodeRadius(d) + 15))
+    .alphaDecay(0.03)
+    .on("tick", ticked);
+
+  // ── Links ──────────────────────────────────────────────────
+  const linkSel = g.selectAll(".link")
+    .data(links, d => d.source.id ? `${d.source.id}-${d.target.id}` : `${d.source}-${d.target}`);
+
+  linkSel.exit()
+    .transition().duration(300).attr("opacity", 0).remove();
+
+  const linkEnter = linkSel.enter()
+    .append("path")
+    .attr("class", "link")
+    .attr("fill", "none")
+    .attr("stroke", d => d.color || "#0ff")
+    .attr("stroke-width", 2)
+    .attr("stroke-opacity", 0.45)
+    .attr("opacity", 0)
+    .transition().duration(500).attr("opacity", 1);
+
+  // ── Nodes ──────────────────────────────────────────────────
+  const nodeSel = g.selectAll(".node")
+    .data(nodes, d => d.id);
+
+  nodeSel.exit()
+    .transition().duration(300)
+    .attr("opacity", 0)
+    .attr("transform", d => `translate(${d.x},${d.y}) scale(0)`)
+    .remove();
+
+  const nodeEnter = nodeSel.enter()
+    .append("g")
+    .attr("class", "node")
+    .attr("tabindex", "0")
+    .attr("role", "button")
+    .attr("aria-label", d => d.data.name[currentLang])
+    .attr("opacity", 0)
+    .style("cursor", "pointer");
+
+  // Hexagon shape
+  nodeEnter.append("path")
+    .attr("class", "hex")
+    .attr("d", d => hexPath(nodeRadius(d)))
+    .attr("fill", d => d.depth === 0 ? "rgba(0,30,40,.8)" : "rgba(20,20,35,.75)")
+    .attr("stroke", d => d.data.color)
+    .attr("stroke-width", d => d.depth === 0 ? 3 : 2)
+    .attr("filter", "url(#glow)");
+
+  // Label
+  nodeEnter.append("text")
+    .attr("class", "label")
+    .attr("text-anchor", "middle")
+    .attr("dy", d => d.depth === 0 ? "0.35em" : "0.35em")
+    .attr("fill", "#fff")
+    .attr("font-size", d => d.depth === 0 ? "15px" : d.depth === 1 ? "12px" : "11px")
+    .attr("font-weight", d => d.depth === 0 ? "700" : "500")
+    .attr("pointer-events", "none")
+    .text(d => d.data.name[currentLang])
+    .each(function(d) { wrapText(this, nodeRadius(d) * 1.5); });
+
+  // Expand indicator (small +/- sign)
+  nodeEnter.append("text")
+    .attr("class", "indicator")
+    .attr("text-anchor", "middle")
+    .attr("dy", d => nodeRadius(d) - 10)
+    .attr("fill", d => d.data.color)
+    .attr("font-size", "14px")
+    .attr("font-weight", "700")
+    .attr("pointer-events", "none")
+    .text(d => {
+      if (!d.data.children) return "";
+      return expandedNodes.has(d.id) ? "−" : "+";
+    });
+
+  // Entry transition
+  nodeEnter.transition().duration(500)
+    .attr("opacity", 1);
+
+  // Merge for updates
+  const allNodes = nodeEnter.merge(nodeSel);
+
+  // Update labels on language change
+  allNodes.select(".label")
+    .text(d => d.data.name[currentLang])
+    .each(function(d) { wrapText(this, nodeRadius(d) * 1.5); });
+
+  allNodes.attr("aria-label", d => d.data.name[currentLang]);
+
+  // Update indicators
+  allNodes.select(".indicator")
+    .text(d => {
+      if (!d.data.children) return "";
+      return expandedNodes.has(d.id) ? "−" : "+";
+    });
+
+  // ── Interactions ───────────────────────────────────────────
+  allNodes
+    .on("mouseenter", function(event, d) {
+      d3.select(this).select(".hex")
+        .transition().duration(200)
+        .attr("filter", "url(#glow-hover)")
+        .attr("stroke-width", d.depth === 0 ? 4 : 3);
+      showTooltip(event, d);
+    })
+    .on("mousemove", (event) => {
+      tooltip.style.left = (event.clientX + 14) + "px";
+      tooltip.style.top = (event.clientY - 10) + "px";
+    })
+    .on("mouseleave", function(event, d) {
+      d3.select(this).select(".hex")
+        .transition().duration(200)
+        .attr("filter", "url(#glow)")
+        .attr("stroke-width", d.depth === 0 ? 3 : 2);
+      hideTooltip();
+    })
+    .on("click", (event, d) => handleNodeClick(d))
+    .on("keydown", (event, d) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        handleNodeClick(d);
+      }
+    });
+
+  // Drag
+  allNodes.call(d3.drag()
+    .on("start", (event, d) => {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x; d.fy = d.y;
+    })
+    .on("drag", (event, d) => {
+      d.fx = event.x; d.fy = event.y;
+    })
+    .on("end", (event, d) => {
+      if (!event.active) simulation.alphaTarget(0);
+      if (d.id !== "root") { d.fx = null; d.fy = null; }
+    })
+  );
+
+  // ── Tick ───────────────────────────────────────────────────
+  function ticked() {
+    g.selectAll(".link")
+      .attr("d", d => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dr = Math.sqrt(dx * dx + dy * dy) * 1.2;
+        return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+      });
+
+    g.selectAll(".node")
+      .attr("transform", d => `translate(${d.x},${d.y})`);
+  }
+}
+
+// ── Text wrapping helper ─────────────────────────────────────────
+function wrapText(textEl, width) {
+  const sel = d3.select(textEl);
+  const text = sel.text();
+  const words = text.split(/\s+/);
+  if (words.length <= 1) return;
+
+  const fontSize = parseFloat(sel.attr("font-size"));
+  const lineHeight = fontSize * 1.2;
+
+  sel.text(null);
+
+  let line = [];
+  let lineNum = 0;
+  const tspan = () => sel.append("tspan")
+    .attr("x", 0)
+    .attr("dy", lineNum === 0 ? "0em" : `${lineHeight}px`)
+    .attr("text-anchor", "middle");
+
+  let current = tspan();
+  words.forEach(word => {
+    line.push(word);
+    current.text(line.join(" "));
+    if (current.node().getComputedTextLength() > width && line.length > 1) {
+      line.pop();
+      current.text(line.join(" "));
+      line = [word];
+      lineNum++;
+      current = tspan();
+      current.text(word);
+    }
+  });
+
+  // Vertically center the multi-line text
+  const totalLines = sel.selectAll("tspan").size();
+  if (totalLines > 1) {
+    const offset = -((totalLines - 1) * lineHeight) / 2;
+    sel.selectAll("tspan").each(function(_, i) {
+      if (i === 0) d3.select(this).attr("dy", `${offset}px`);
+    });
+  }
+}
+
+// ── Node click handler ───────────────────────────────────────────
+function handleNodeClick(d) {
+  // If it's a leaf node with details, show modal
+  if (d.data.details && !d.data.children) {
+    openModal(d);
+    return;
+  }
+  // Toggle expand/collapse
+  if (d.data.children) {
+    if (expandedNodes.has(d.id)) {
+      // Collapse this node and all descendants
+      collapseRecursive(d.data);
+    } else {
+      expandedNodes.add(d.id);
+    }
+    render();
+  }
+}
+
+function collapseRecursive(dataNode) {
+  expandedNodes.delete(dataNode.id);
+  if (dataNode.children) {
+    dataNode.children.forEach(c => collapseRecursive(c));
+  }
+}
+
+// ── Tooltip ──────────────────────────────────────────────────────
+function showTooltip(event, d) {
+  let text = d.data.name[currentLang];
+  if (d.data.details) {
+    const preview = d.data.details[currentLang].substring(0, 80);
+    text += "\n" + preview + (d.data.details[currentLang].length > 80 ? "…" : "");
+  }
+  if (d.data.children && !expandedNodes.has(d.id)) {
+    text += currentLang === "en" ? "\n(Click to expand)" : "\n(Genişletmek için tıklayın)";
+  }
+  tooltip.textContent = text;
+  tooltip.style.whiteSpace = "pre-line";
+  tooltip.style.left = (event.clientX + 14) + "px";
+  tooltip.style.top = (event.clientY - 10) + "px";
+  tooltip.classList.add("visible");
+  tooltip.setAttribute("aria-hidden", "false");
+}
+
+function hideTooltip() {
+  tooltip.classList.remove("visible");
+  tooltip.setAttribute("aria-hidden", "true");
+}
+
+// ── Modal ────────────────────────────────────────────────────────
+function openModal(d) {
+  modalTitle.textContent = d.data.name[currentLang];
+  const raw = d.data.details[currentLang];
+  // Convert URLs to clickable links
+  const html = raw.replace(
+    /(https?:\/\/[^\s]+)/g,
+    '<a href="$1" target="_blank" rel="noopener">$1</a>'
+  ).replace(/\n/g, "<br>");
+  modalBody.innerHTML = html;
+  modalOverlay.classList.add("open");
+  document.getElementById("modal-close").focus();
+}
+
+function closeModal() {
+  modalOverlay.classList.remove("open");
+}
+
+document.getElementById("modal-close").addEventListener("click", closeModal);
+modalOverlay.addEventListener("click", e => {
+  if (e.target === modalOverlay) closeModal();
+});
+
+// ── Zoom & Pan ───────────────────────────────────────────────────
+const zoom = d3.zoom()
+  .scaleExtent([0.3, 4])
+  .on("zoom", (event) => {
+    g.attr("transform", event.transform);
+  });
+
+svg.call(zoom);
+
+// ── Keyboard navigation ─────────────────────────────────────────
+document.addEventListener("keydown", e => {
+  const step = 40;
+  const currentTransform = d3.zoomTransform(svg.node());
+
+  if (e.key === "Escape") {
+    closeModal();
+    return;
+  }
+  if (modalOverlay.classList.contains("open")) return;
+
+  switch (e.key) {
+    case "ArrowLeft":
+      svg.call(zoom.translateBy, step, 0); e.preventDefault(); break;
+    case "ArrowRight":
+      svg.call(zoom.translateBy, -step, 0); e.preventDefault(); break;
+    case "ArrowUp":
+      svg.call(zoom.translateBy, 0, step); e.preventDefault(); break;
+    case "ArrowDown":
+      svg.call(zoom.translateBy, 0, -step); e.preventDefault(); break;
+    case "+": case "=":
+      svg.call(zoom.scaleBy, 1.2); e.preventDefault(); break;
+    case "-": case "_":
+      svg.call(zoom.scaleBy, 0.8); e.preventDefault(); break;
+  }
+});
+
+// ── Language toggle ──────────────────────────────────────────────
+document.querySelectorAll("#lang-toggle button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    currentLang = btn.dataset.lang;
+    document.querySelectorAll("#lang-toggle button").forEach(b => {
+      b.classList.remove("active");
+      b.setAttribute("aria-checked", "false");
+    });
+    btn.classList.add("active");
+    btn.setAttribute("aria-checked", "true");
+    document.documentElement.lang = currentLang;
+    // Update all visible labels
+    g.selectAll(".node .label")
+      .text(d => d.data.name[currentLang])
+      .each(function(d) { wrapText(this, nodeRadius(d) * 1.5); });
+    g.selectAll(".node")
+      .attr("aria-label", d => d.data.name[currentLang]);
+  });
+});
+
+// ── High contrast toggle ────────────────────────────────────────
+document.getElementById("hc-toggle").addEventListener("click", () => {
+  document.body.classList.toggle("high-contrast");
+});
+
+// ── Window resize ────────────────────────────────────────────────
+window.addEventListener("resize", () => {
+  W = window.innerWidth;
+  H = window.innerHeight;
+  svg.attr("viewBox", `0 0 ${W} ${H}`);
+  const root = simulation ? simulation.nodes().find(n => n.id === "root") : null;
+  if (root) { root.fx = W / 2; root.fy = H / 2; }
+  if (simulation) simulation.force("center", d3.forceCenter(W / 2, H / 2).strength(0.05));
+  if (simulation) simulation.alpha(0.3).restart();
+});
+
+// ── Initial render ───────────────────────────────────────────────
+render();
+  </script>
+</body>
+</html>
