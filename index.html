@@ -172,8 +172,17 @@ const DATA = {
           name: { en: "Education", tr: "Eğitim" },
           color: "#00e5ff",
           details: {
-            en: "Bachelor's degree in Computer Engineering. Passionate about software development, data visualization, and modern web technologies.",
-            tr: "Bilgisayar Mühendisliği lisans derecesi. Yazılım geliştirme, veri görselleştirme ve modern web teknolojilerine tutkulu."
+            en: "Engineering Degree\n2× Master's in Finance\nA unique blend of technical depth and financial expertise — bridging the gap between code and capital.",
+            tr: "Mühendislik Lisans Derecesi\n2× Finans Yüksek Lisansı\nTeknik derinlik ve finansal uzmanlığın benzersiz birleşimi — kod ile sermaye arasında köprü."
+          }
+        },
+        {
+          id: "personality",
+          name: { en: "Who I Am", tr: "Ben Kimim" },
+          color: "#00e5ff",
+          details: {
+            en: "35 y/o engineer who stays calm under pressure and codes with confidence.\nBut don't let the composure fool you — I've got a funny side and a cool factor that keeps things interesting. 😎\nI build things that work, and I make the journey fun.",
+            tr: "35 yaşında, baskı altında sakin kalan ve özgüvenle kod yazan bir mühendis.\nAma bu sakinlik sizi yanıltmasın — eğlenceli ve havalı bir tarafım da var. 😎\nÇalışan şeyler inşa ederim ve bu yolculuğu eğlenceli kılarım."
           }
         },
         {
@@ -181,51 +190,8 @@ const DATA = {
           name: { en: "Skills", tr: "Beceriler" },
           color: "#00e5ff",
           details: {
-            en: "JavaScript · TypeScript · Python · D3.js · React · Node.js · SQL · Git · Docker · AWS",
-            tr: "JavaScript · TypeScript · Python · D3.js · React · Node.js · SQL · Git · Docker · AWS"
-          }
-        },
-        {
-          id: "interests",
-          name: { en: "Interests", tr: "İlgi Alanları" },
-          color: "#00e5ff",
-          details: {
-            en: "Data visualization, open-source projects, machine learning, and creative coding.",
-            tr: "Veri görselleştirme, açık kaynak projeler, makine öğrenmesi ve yaratıcı kodlama."
-          }
-        }
-      ]
-    },
-    {
-      id: "experience",
-      name: { en: "Work Experience", tr: "İş Deneyimleri" },
-      color: "#bf5fff",
-      children: [
-        {
-          id: "job1",
-          name: { en: "Senior Developer", tr: "Kıdemli Geliştirici" },
-          color: "#c77dff",
-          details: {
-            en: "TechCorp (2021 – Present)\nLead front-end architecture, built real-time dashboards with D3.js, mentored junior developers.",
-            tr: "TechCorp (2021 – Günümüz)\nÖn yüz mimarisini yönetti, D3.js ile gerçek zamanlı panolar oluşturdu, genç geliştiricilere mentorluk yaptı."
-          }
-        },
-        {
-          id: "job2",
-          name: { en: "Full-Stack Developer", tr: "Full-Stack Geliştirici" },
-          color: "#c77dff",
-          details: {
-            en: "WebStudio (2018 – 2021)\nDeveloped scalable REST APIs and SPAs for e-commerce clients. Improved page load times by 40%.",
-            tr: "WebStudio (2018 – 2021)\nE-ticaret müşterileri için ölçeklenebilir REST API'ler ve SPA'lar geliştirdi. Sayfa yüklenme sürelerini %40 iyileştirdi."
-          }
-        },
-        {
-          id: "job3",
-          name: { en: "Junior Developer", tr: "Junior Geliştirici" },
-          color: "#c77dff",
-          details: {
-            en: "StartupHub (2016 – 2018)\nBuilt MVPs for early-stage startups using Node.js and React.",
-            tr: "StartupHub (2016 – 2018)\nNode.js ve React kullanarak erken aşama girişimler için MVP'ler oluşturdu."
+            en: "Mobile Development · Web3 / Blockchain · Smart Contracts · DeFi · Flash Loans · Algorithmic Trading · Game Development · Full-Stack Engineering · Python · JavaScript · Solidity",
+            tr: "Mobil Geliştirme · Web3 / Blockchain · Akıllı Sözleşmeler · DeFi · Flash Loan · Algoritmik Trading · Oyun Geliştirme · Full-Stack Mühendislik · Python · JavaScript · Solidity"
           }
         }
       ]
@@ -236,31 +202,88 @@ const DATA = {
       color: "#ff5c8a",
       children: [
         {
-          id: "proj1",
-          name: { en: "DataViz Toolkit", tr: "DataViz Araç Seti" },
+          id: "games",
+          name: { en: "Games", tr: "Oyunlar" },
           color: "#ff7eb3",
-          details: {
-            en: "Open-source D3.js component library for rapid dashboard prototyping.\nTech: D3.js, TypeScript, Rollup\nhttps://github.com/example/dataviz-toolkit",
-            tr: "Hızlı panel prototipleme için açık kaynak D3.js bileşen kütüphanesi.\nTekn: D3.js, TypeScript, Rollup\nhttps://github.com/example/dataviz-toolkit"
-          }
+          children: [
+            {
+              id: "game1",
+              name: { en: "Mobile Game 1", tr: "Mobil Oyun 1" },
+              color: "#ff99c8",
+              details: {
+                en: "A mobile game built for iOS & Android.\nDesigned, developed, and shipped end-to-end.",
+                tr: "iOS ve Android için geliştirilmiş bir mobil oyun.\nUçtan uca tasarlandı, geliştirildi ve yayınlandı."
+              }
+            },
+            {
+              id: "game2",
+              name: { en: "Mobile Game 2", tr: "Mobil Oyun 2" },
+              color: "#ff99c8",
+              details: {
+                en: "A second mobile game with engaging gameplay mechanics.\nBuilt for iOS & Android platforms.",
+                tr: "İlgi çekici oyun mekanikleriyle ikinci bir mobil oyun.\niOS ve Android platformları için geliştirildi."
+              }
+            },
+            {
+              id: "game3",
+              name: { en: "Web3 Browser Game", tr: "Web3 Tarayıcı Oyunu" },
+              color: "#ff99c8",
+              details: {
+                en: "A blockchain-integrated browser game with Web3 wallet connectivity.\nPlayers interact with on-chain assets and NFT mechanics.",
+                tr: "Web3 cüzdan bağlantısıyla blockchain entegreli bir tarayıcı oyunu.\nOyuncular zincir üstü varlıklar ve NFT mekanikleriyle etkileşime girer."
+              }
+            }
+          ]
         },
         {
-          id: "proj2",
-          name: { en: "SmartBudget App", tr: "SmartBudget Uygulaması" },
+          id: "apps",
+          name: { en: "Mobile Apps", tr: "Mobil Uygulamalar" },
           color: "#ff7eb3",
-          details: {
-            en: "Personal finance tracker with interactive charts and AI-powered insights.\nTech: React, Node.js, PostgreSQL, Chart.js",
-            tr: "Etkileşimli grafikler ve yapay zekâ destekli içgörülerle kişisel finans takipçisi.\nTekn: React, Node.js, PostgreSQL, Chart.js"
-          }
+          children: [
+            {
+              id: "app1",
+              name: { en: "Mobile App 1", tr: "Mobil Uygulama 1" },
+              color: "#ff99c8",
+              details: {
+                en: "A full-featured mobile application.\nDesigned and developed for real-world use on iOS & Android.",
+                tr: "Tam özellikli bir mobil uygulama.\niOS ve Android'de gerçek kullanım için tasarlandı ve geliştirildi."
+              }
+            },
+            {
+              id: "app2",
+              name: { en: "Mobile App 2", tr: "Mobil Uygulama 2" },
+              color: "#ff99c8",
+              details: {
+                en: "A second mobile application with polished UX.\nBuilt end-to-end from concept to App Store deployment.",
+                tr: "Cilalı UX'e sahip ikinci bir mobil uygulama.\nKonseptten App Store dağıtımına kadar uçtan uca geliştirildi."
+              }
+            }
+          ]
         },
         {
-          id: "proj3",
-          name: { en: "Portfolio Mind Map", tr: "Portfolyo Zihin Haritası" },
+          id: "bots",
+          name: { en: "Trading Bots", tr: "Trading Botları" },
           color: "#ff7eb3",
-          details: {
-            en: "This very site! An interactive hexagonal mind-map portfolio built with D3.js.\nTech: D3.js, Vanilla JS, SVG",
-            tr: "Bu sitenin kendisi! D3.js ile oluşturulmuş etkileşimli altıgen zihin haritası portfolyosu.\nTekn: D3.js, Vanilla JS, SVG"
-          }
+          children: [
+            {
+              id: "bot1",
+              name: { en: "Long-Term Trading Bot", tr: "Uzun Vadeli Trading Botu" },
+              color: "#ff99c8",
+              details: {
+                en: "An algorithmic trading bot designed for long-term market positions.\nUses technical analysis and risk management strategies to execute trades with discipline and patience.",
+                tr: "Uzun vadeli piyasa pozisyonları için tasarlanmış algoritmik bir trading botu.\nDisiplin ve sabırla işlem gerçekleştirmek için teknik analiz ve risk yönetimi stratejileri kullanır."
+              }
+            },
+            {
+              id: "bot2",
+              name: { en: "Crypto Arbitrage Bot", tr: "Kripto Arbitraj Botu" },
+              color: "#ff99c8",
+              details: {
+                en: "A DeFi arbitrage bot leveraging flash loans for cross-DEX price discrepancy exploitation.\nExecutes atomic transactions — borrow, swap, repay — all in a single block. No upfront capital needed.\nBuilt with Solidity smart contracts and off-chain monitoring.",
+                tr: "DEX'ler arası fiyat farklılıklarını flash loan ile kullanan bir DeFi arbitraj botu.\nAtomik işlemler gerçekleştirir — borç al, swap yap, geri öde — hepsi tek bir blokta. Ön sermaye gerekmez.\nSolidity akıllı sözleşmeleri ve zincir dışı izleme ile geliştirildi."
+              }
+            }
+          ]
         }
       ]
     },
@@ -375,7 +398,8 @@ function buildGraph() {
 function nodeRadius(d) {
   if (d.depth === 0) return 70;
   if (d.depth === 1) return 50;
-  return 38;
+  if (d.depth === 2) return 42;
+  return 34;
 }
 
 // ── Link generator (curved) ─────────────────────────────────────
@@ -416,7 +440,9 @@ function render() {
   simulation = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links).id(d => d.id).distance(d => {
       const src = nodes.find(n => n.id === (typeof d.source === "object" ? d.source.id : d.source));
-      return src && src.depth === 0 ? 180 : 130;
+      if (src && src.depth === 0) return 180;
+      if (src && src.depth === 1) return 140;
+      return 110;
     }).strength(0.7))
     .force("charge", d3.forceManyBody().strength(-400))
     .force("center", d3.forceCenter(W / 2, H / 2).strength(0.05))
